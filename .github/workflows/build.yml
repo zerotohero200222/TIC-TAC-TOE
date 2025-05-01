@@ -21,4 +21,4 @@ jobs:
         run: npm install
 
       - name: Trivy file scan 
-        run: trivy fs . > trivy.txt
+        run: trivy fs . > trivyfs.txt
