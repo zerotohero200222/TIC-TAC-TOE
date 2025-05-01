@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - main
+
+
 jobs:
   build-analyze-scan:
     name: Build
@@ -12,6 +14,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
       - name: Build and analyze with SonarQube
         uses: sonarsource/sonarqube-scan-action@master
         env:
@@ -34,3 +37,17 @@ jobs:
 
       - name: Image scan
         run: trivy image localman222/tic-tac-toe:latest > trivyimage.txt
+  
+  deploy:
+   needs: build-analyze-scan
+   runs-on: [self-hosted]
+   steps:
+      - name: docker pull image
+        run: docker pull localman222/tic-tac-toe:latest
+
+      - name: Image scan
+        run: trivy image localman222/tic-tac-toe:latest > trivyimagedeploy.txt 
+
+      - name: Deploy to container
+        run: docker run -d --name game -p 3000:3000 localman222/tic-tac-toe:latest
+        
