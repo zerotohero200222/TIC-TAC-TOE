@@ -31,3 +31,6 @@ jobs:
           docker push localman222/tic-tac-toe:latest
         env:
           DOCKER_CLI_ACI: 1
+
+      - name: Image scan
+        run: trivy image localman222/tic-tac-toe:latest > trivyimage.txt
